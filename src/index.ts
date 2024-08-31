@@ -1,20 +1,17 @@
-/*
-import { CODIGOS } from './constants'
-import { createTable, dropTable } from './utils/scripts'
+// import { CODIGOS } from './constants'
+// import { createTable, dropTable } from './utils/scripts'
 
-const main = async () => {
-  try {
-    await Promise.all(CODIGOS.map(async (codigo) => await createTable(codigo)))
-    return console.log('Tablas creadas y/o Eliminadas');
-  } catch (error) {
-    console.error(error)
-  } finally {
-    return console.log('Proceso finalizado');
-  }
-}
-main()
-*/
-
+// const main = async () => {
+//   try {
+//     await Promise.all(CODIGOS.map(async (codigo) => await createTable(codigo)))
+//     return console.log('Tablas creadas y/o Eliminadas');
+//   } catch (error) {
+//     console.error(error)
+//   } finally {
+//     return console.log('Proceso finalizado');
+//   }
+// }
+// main()
 
 import { inserDataintoTable } from './utils/scripts'
 import { CronJob } from 'cron'
@@ -45,7 +42,7 @@ const main = async () => {
 }
 
 const job = new CronJob(
-  '0 6-22 * * *', // Ejecutar cada 5 minutos
+  '0 6-22 * * *', // Ejecutar cada hora entre las 6:00 y las 22:00 6-22
   main,         // La función que se ejecutará en cada tick (cuando se cumpla la expresión cron).
   null,         // (Opcional) La función que se ejecutará cuando el trabajo se detenga.
   true,         // Si el trabajo debe comenzar inmediatamente al ser creado.

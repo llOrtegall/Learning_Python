@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:8.2.0
+    container_name: mysql_test
+    restart: always
+    ports:
+      - "9010:3306"
+    volumes:
+      - ./volumen_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456 
+      - TZ=America/Bogota
+    
