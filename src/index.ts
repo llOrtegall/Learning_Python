@@ -1,160 +1,55 @@
-// import { fn } from 'sequelize'
-// import { Meta } from './models'
+/*
+import { CODIGOS } from './constants'
+import { createTable, dropTable } from './utils/scripts'
 
-// const main = async () => {
-//   try {
-//     const products = await Meta.findAll({
-//       where: {
-//         FECHA: fn('CURDATE'),
-//         ZONA: '39627',
-//         CCOSTO: '39629'
-//       }
-//     })
-
-//     return console.log(products.length);
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-
-// main()
-
-// const CODIGO = [
-//   45532,
-//   44383,
-//   43880,
-//   43862,
-//   43706,
-//   43682,
-//   40043,
-//   39954,
-//   39947,
-//   39946,
-//   39944,
-//   39943,
-//   39941,
-//   39931,
-//   39930,
-//   39929,
-//   39928,
-//   39927,
-//   39925,
-//   39924,
-//   39922,
-//   39920,
-//   39919,
-//   39917,
-//   39916,
-//   39915,
-//   39911,
-//   39910,
-//   39909,
-//   39908,
-//   39907,
-//   39906,
-//   39905,
-//   39904,
-//   39902,
-//   39901,
-//   39900,
-//   39899,
-//   39898,
-//   39897,
-//   39896,
-//   39895,
-//   39894,
-//   39891,
-//   39890,
-//   39889,
-//   39886,
-//   39885,
-//   39884,
-//   39883,
-//   39882,
-//   39881,
-//   39880,
-//   39879,
-//   39878,
-//   39876,
-//   39875,
-//   39874,
-//   39873,
-//   39872,
-//   39871,
-//   39870,
-//   39869,
-//   39868,
-//   39867,
-//   39866,
-//   39865,
-//   39864,
-//   39863,
-//   39862,
-//   39861,
-//   39860,
-//   39859,
-//   39858,
-//   39857,
-//   39856,
-//   39855,
-//   39854,
-//   39853,
-//   39852,
-//   39851,
-//   39849,
-//   39845,
-//   39844,
-//   39843,
-//   39842,
-//   39841,
-//   39840,
-//   39839,
-//   39837,
-//   39833,
-//   39832,
-//   39831,
-//   39829,
-//   39828,
-//   39825,
-//   39824,
-//   39822,
-//   39821,
-//   39820,
-//   39819,
-//   39818,
-//   39816,
-//   39815,
-//   39814,
-//   39813,
-//   39812,
-//   39811,
-//   39810,
-//   39809,
-//   39808,
-//   39807,
-//   39806,
-//   39805,
-//   39804,
-//   39803,
-//   39802,
-//   39801,
-//   39800,
-//   39799,
-// ]
-
-// const main = async () => {
-//   try {
-//     const tables = await Promise.all(CODIGO.map(async (codigo) => {
-//       return await createTable(codigo)
-//     }))
-//     return console.log(tables)
-//   } catch (error) {
-//     console.error(error)
-//   }finally{
-//     console.log('Proceso finalizado')
-//   }
-// }
-
-// main()
+const main = async () => {
+  try {
+    await Promise.all(CODIGOS.map(async (codigo) => await createTable(codigo)))
+    return console.log('Tablas creadas y/o Eliminadas');
+  } catch (error) {
+    console.error(error)
+  } finally {
+    return console.log('Proceso finalizado');
+  }
+}
+main()
+*/
 
 
+import { inserDataintoTable } from './utils/scripts'
+import { CronJob } from 'cron'
+import { fn } from 'sequelize'
+import { Meta } from './models'
+
+const main = async () => {
+  try {
+    const products = await Meta.findAll({
+      where: {
+        FECHA: fn('CURDATE'),
+        ZONA: '39627',
+        CCOSTO: '39629'
+      }
+    })
+    // Ejecutar todas las operaciones asincrónicas en paralelo
+    await Promise.all(products.map(async (product) => {
+      const codigo = parseInt(product.SUCURSAL)
+      await inserDataintoTable(codigo,product)
+    }))
+
+    console.log(`Se han insertado ${products.length} registros`);
+  } catch (error) {
+    console.error(error)
+  } finally {
+    console.log('Proceso finalizado')
+  }
+}
+
+const job = new CronJob(
+  '0 6-22 * * *', // Ejecutar cada 5 minutos
+  main,         // La función que se ejecutará en cada tick (cuando se cumpla la expresión cron).
+  null,         // (Opcional) La función que se ejecutará cuando el trabajo se detenga.
+  true,         // Si el trabajo debe comenzar inmediatamente al ser creado.
+  'America/Bogota' // La zona horaria en la que se debe interpretar la expresión cron.
+)
+
+job.start()
