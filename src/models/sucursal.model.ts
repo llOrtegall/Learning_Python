@@ -58,7 +58,7 @@ Sucursal.init({
   DISPOSITIVO: { type: DataTypes.STRING(50), allowNull: false },
   SUPERVISOR: { type: DataTypes.STRING(50), allowNull: false },
   CANAL: { type: DataTypes.STRING(50), allowNull: false },
-  CATEGORIA: { type: DataTypes.STRING(50), allowNull: false },
+  CATEGORIA: { type: DataTypes.STRING(50), allowNull: true },
   HORA_ENTRADA: { type: DataTypes.STRING(50), allowNull: false },
   HORA_SALIDA: { type: DataTypes.STRING(50), allowNull: false },
   HORA_ENTRADA_FES: { type: DataTypes.STRING(50), allowNull: false },
