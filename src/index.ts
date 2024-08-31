@@ -1,2 +1,3 @@
-import { Vendedores } from './model/vendedores.model'
+import { getSucPoweBi, getVenPoweBi } from './utils/scripts';
+
 
