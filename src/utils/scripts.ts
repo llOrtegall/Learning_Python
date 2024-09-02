@@ -84,17 +84,11 @@ export const createTable = async (codigo: number) => {
       FECHA Date,
       HORA VARCHAR(10),
       ASTRO INT,
-      ASTRO_META INT,
       CHANCE INT,
-      CHANCE_META INT,
       PAGAMAS INT,
-      PAGAMAS_META INT,
       PAGATODO INT,
-      PAGATODO_META INT,
       PATA_MILLONARIA INT,
-      PATA_MILLONARIA_META INT,
-      DOBLECHANCE INT,
-      DOBLECHANCE_META INT
+      DOBLECHANCE INT
     );
   `
 
@@ -127,17 +121,11 @@ export const inserDataintoTable = async (codigo: number, data: Meta) => {
     fecha,
     hora,
     data.ASTRO,
-    (data.PROMEDIO_DIARIO_ASTRO / 2),
     data.CHANCE,
-    (data.PROMEDIO_DIARIO_CHANCE / 3),
     data.PAGAMAS,
-    (data.PROMEDIO_DIARIO_PAGAMAS / 2),
     data.PAGATODO,
-    (data.PROMEDIO_DIARIO_PAGATODO / 2),
     data.PATA_MILLONARIA,
-    (data.PROMEDIO_DIARIO_PATAMI / 2),
     data.DOBLECHANCE,
-    (data.PROMEDIO_DIARIO_DOBLECHANCE / 3)
   ]
 
   try {
