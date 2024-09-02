@@ -78,6 +78,7 @@ export const createTable = async (codigo: number) => {
 
   const query = `
     CREATE TABLE IF NOT EXISTS ${tableName} (
+      FECHA Date,
       CHANCE INT,
       PAGAMAS INT,
       PAGATODO INT,
@@ -116,11 +117,12 @@ export const inserDataintoTable = async (codigo: number,data: Meta) => {
 
   const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
 
+  const fecha = new Date().toISOString().slice(0, 10)
 
   const query = `
-    INSERT INTO ${tableName} (CHANCE, PAGAMAS, PAGATODO, PAGATODO_JAMUNDI, CHOLADITO, PATA_MILLONARIA, DOBLECHANCE, CHANCE_MILLONARIO, ASTRO, LOTERIA_FISICA, LOTERIA_VIRTUAL, BETPLAY, GIROS, SOAT, RECAUDOS, RECARGAS) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    INSERT INTO ${tableName} (FECHA, CHANCE, PAGAMAS, PAGATODO, PAGATODO_JAMUNDI, CHOLADITO, PATA_MILLONARIA, DOBLECHANCE, CHANCE_MILLONARIO, ASTRO, LOTERIA_FISICA, LOTERIA_VIRTUAL, BETPLAY, GIROS, SOAT, RECAUDOS, RECARGAS) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `
-  const values = [data.CHANCE, data.PAGAMAS, data.PAGATODO, data.PAGATODO_JAMUNDI, data.CHOLADITO, data.PATA_MILLONARIA, data.DOBLECHANCE, data.CHANCE_MILLONARIO, data.ASTRO, data.LOTERIA_FISICA, data.LOTERIA_VIRTUAL, data.BETPLAY, data.GIROS, data.SOAT, data.RECAUDOS, data.RECARGAS]
+  const values = [fecha, data.CHANCE, data.PAGAMAS, data.PAGATODO, data.PAGATODO_JAMUNDI, data.CHOLADITO, data.PATA_MILLONARIA, data.DOBLECHANCE, data.CHANCE_MILLONARIO, data.ASTRO, data.LOTERIA_FISICA, data.LOTERIA_VIRTUAL, data.BETPLAY, data.GIROS, data.SOAT, data.RECAUDOS, data.RECARGAS]
 
   try {
     const [rows] = await connection.query(query,values)
