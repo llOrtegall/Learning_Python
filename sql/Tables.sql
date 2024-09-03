@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS Astro_hora (
   venta INT
 );
 
+# TODO: ESTOS VALORES PUEDEN AJUSTRASE CON BASE A LAS CATEGORIAS DE LOS PDVTAS 
 INSERT INTO Astro_hora (hora_inicial, hora_final, venta) VALUES 
 ('06:00', '7:00', 2000),
 ('07:00', '8:00', 5000),

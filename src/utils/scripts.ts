@@ -1,10 +1,9 @@
 import { DbConfig, Sucursal, Vendedor } from './types'
-import { format, toZonedTime } from 'date-fns-tz'
 import mysql from 'mysql2/promise'
 import { Meta } from '../models'
 import 'dotenv/config'
 
-const timeZone = 'America/Bogota'
+
 
 // const HOST = process.env.DB_POWERBI_HOST!
 // const USER = process.env.DB_POWERBI_USER!
@@ -81,14 +80,16 @@ export const createTable = async (codigo: number) => {
 
   const query = `
     CREATE TABLE IF NOT EXISTS ${tableName} (
-      FECHA Date,
+      FECHA Date NOT NULL PRIMARY KEY,
       HORA VARCHAR(10),
       ASTRO INT,
       CHANCE INT,
       PAGAMAS INT,
       PAGATODO INT,
       PATA_MILLONARIA INT,
-      DOBLECHANCE INT
+      DOBLECHANCE INT,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
   `
 
@@ -101,7 +102,7 @@ export const createTable = async (codigo: number) => {
   }
 }
 
-export const inserDataintoTable = async (codigo: number, data: Meta) => {
+export const inserDataintoTable = async (codigo: number, data: Meta , fecha: string, hora: string) => {
   // Validar el nombre de la tabla para evitar inyecciones SQL
   if (!Number.isInteger(codigo) || codigo <= 0) {
     throw new Error('Código de tabla inválido')
@@ -112,25 +113,30 @@ export const inserDataintoTable = async (codigo: number, data: Meta) => {
   const query = `
     INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?)
   `
-  const now = new Date()
-  const zonedDate = toZonedTime(now, timeZone)
-  const fecha = format(zonedDate, 'yyyy-MM-dd', { timeZone })
-  const hora = format(zonedDate, 'HH:mm', { timeZone })
-
-  const values = [
-    fecha,
-    hora,
-    data.ASTRO,
-    data.CHANCE,
-    data.PAGAMAS,
-    data.PAGATODO,
-    data.PATA_MILLONARIA,
-    data.DOBLECHANCE,
-  ]
+  const values = [fecha, hora, data.ASTRO, data.CHANCE, data.PAGAMAS, data.PAGATODO, data.PATA_MILLONARIA, data.DOBLECHANCE ]
 
   try {
-    const [rows] = await connection.query(query, values)
-    return rows
+    await connection.query(query, values);
+  } catch (error) {
+    console.error(error)
+    throw new Error('Error al insertar datos en la tabla')
+  }
+}
+
+export const insertDataSinc = async (codigo: number, fecha: string, hora: string) => {
+  // Validar el nombre de la tabla para evitar inyecciones SQL
+  if (!Number.isInteger(codigo) || codigo <= 0) {
+    throw new Error('Código de tabla inválido')
+  }
+
+  const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
+
+  const query = `INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?) `
+
+  const values = [fecha, hora, 0, 0, 0, 0, 0, 0,]
+
+  try {
+    await connection.query(query, values);
   } catch (error) {
     console.error(error)
     throw new Error('Error al insertar datos en la tabla')
