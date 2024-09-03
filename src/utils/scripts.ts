@@ -110,7 +110,7 @@ export const inserDataintoTable = async (codigo: number, data: Meta) => {
   const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
 
   const query = `
-    INSERT INTO ${tableName} (FECHA, HORA, ASTRO, ASTRO_META, CHANCE, CHANCE_META, PAGAMAS, PAGAMAS_META, PAGATODO, PAGATODO_META, PATA_MILLONARIA, PATA_MILLONARIA_META, DOBLECHANCE, DOBLECHANCE_META) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?)
   `
   const now = new Date()
   const zonedDate = toZonedTime(now, timeZone)
