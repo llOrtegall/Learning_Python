@@ -2,6 +2,7 @@ import { DbConfig, Sucursal, Vendedor } from './types'
 import mysql from 'mysql2/promise'
 import { Meta } from '../models'
 import 'dotenv/config'
+import { getTime } from './time'
 
 
 
@@ -102,13 +103,15 @@ export const createTable = async (codigo: number) => {
   }
 }
 
-export const inserDataintoTable = async (codigo: number, data: Meta , fecha: string, hora: string) => {
+export const inserDataintoTable = async (codigo: number, data: Meta) => {
   // Validar el nombre de la tabla para evitar inyecciones SQL
   if (!Number.isInteger(codigo) || codigo <= 0) {
     throw new Error('Código de tabla inválido')
   }
 
   const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
+
+  const { fecha, hora } = getTime()
 
   const query = `
     INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?)
@@ -123,13 +126,15 @@ export const inserDataintoTable = async (codigo: number, data: Meta , fecha: str
   }
 }
 
-export const insertDataSinc = async (codigo: number, fecha: string, hora: string) => {
+export const insertDataSinc = async (codigo: number) => {
   // Validar el nombre de la tabla para evitar inyecciones SQL
   if (!Number.isInteger(codigo) || codigo <= 0) {
     throw new Error('Código de tabla inválido')
   }
 
   const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
+
+  const { fecha, hora } = getTime()
 
   const query = `INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?) `
 

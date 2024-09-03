@@ -14,37 +14,35 @@
 // main()
 
 import { inserDataintoTable, insertDataSinc } from './utils/scripts'
-import { format, toZonedTime } from 'date-fns-tz'
 import { CODIGOS } from './constants'
 import { Meta } from './models'
 import { CronJob } from 'cron'
 import { fn } from 'sequelize'
 
-const timeZone = 'America/Bogota'
-
 const main = async () => {
+
   try {
     const products = await Meta.findAll({
       where: {
         FECHA: fn('CURDATE')
       }
     })
-    // Ejecutar todas las operaciones asincrónicas en paralelo
-    await Promise.all(products.map(async (product) => {
-      const now = new Date()
-      const zonedDate = toZonedTime(now, timeZone)
-      const fecha = format(zonedDate, 'yyyy-MM-dd', { timeZone })
-      const hora = format(zonedDate, 'HH:mm', { timeZone })
 
-      const codigo = parseInt(product.SUCURSAL)
-      if (product.SUCURSAL in CODIGOS) {
-        await inserDataintoTable(codigo, product, fecha, hora)
-      } else {
-        await insertDataSinc(codigo, fecha, hora)
-      }
+    const noExisten = CODIGOS.filter(cod => !products.some(p => parseInt(p.SUCURSAL) === cod))
+
+    console.log(noExisten);
+    console.log(noExisten.length);
+
+    await Promise.all(products.map(async (product) => {
+      const codigo = parseInt(product.SUCURSAL);
+      inserDataintoTable(codigo,product)
     }))
 
-    console.log(`Se han insertado ${products.length} registros`);
+    await Promise.all(noExisten.map(async (codigo) => {
+      await insertDataSinc(codigo)
+    }))
+
+    console.log(`Se han insertado ${products.length + noExisten.length} registros`);
   } catch (error) {
     console.error(error)
   } finally {
