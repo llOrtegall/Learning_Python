@@ -30,9 +30,6 @@ const main = async () => {
 
     const noExisten = CODIGOS.filter(cod => !products.some(p => parseInt(p.SUCURSAL) === cod))
 
-    console.log(noExisten);
-    console.log(noExisten.length);
-
     await Promise.all(products.map(async (product) => {
       const codigo = parseInt(product.SUCURSAL);
       inserDataintoTable(codigo,product)
@@ -51,7 +48,7 @@ const main = async () => {
 }
 
 const job = new CronJob(
-  '*/2 * * * *', // Ejecutar cada hora entre las 6:00 y las 22:00 6-22
+  '0 6-22 * * *', // Ejecutar cada hora entre las 6:00 y las 22:00 6-22
   main,         // La función que se ejecutará en cada tick (cuando se cumpla la expresión cron).
   null,         // (Opcional) La función que se ejecutará cuando el trabajo se detenga.
   true,         // Si el trabajo debe comenzar inmediatamente al ser creado.

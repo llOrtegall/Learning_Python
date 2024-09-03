@@ -109,17 +109,13 @@ export const inserDataintoTable = async (codigo: number, data: Meta) => {
     throw new Error('Código de tabla inválido')
   }
 
-  const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
-
   const { fecha, hora } = getTime()
 
-  const query = `
-    INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?)
-  `
-  const values = [fecha, hora, data.ASTRO, data.CHANCE, data.PAGAMAS, data.PAGATODO, data.PATA_MILLONARIA, data.DOBLECHANCE ]
-
   try {
-    await connection.query(query, values);
+    await connection.execute(
+      `INSERT INTO table_${codigo} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?)`,
+      [fecha, hora, data.ASTRO, data.CHANCE, data.PAGAMAS, data.PAGATODO, data.PATA_MILLONARIA, data.DOBLECHANCE]
+    );
   } catch (error) {
     console.error(error)
     throw new Error('Error al insertar datos en la tabla')
@@ -132,16 +128,12 @@ export const insertDataSinc = async (codigo: number) => {
     throw new Error('Código de tabla inválido')
   }
 
-  const tableName = `table_${codigo}` // Prefijo para evitar nombres de tablas no válidos
-
   const { fecha, hora } = getTime()
 
-  const query = `INSERT INTO ${tableName} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?) `
-
-  const values = [fecha, hora, 0, 0, 0, 0, 0, 0,]
-
   try {
-    await connection.query(query, values);
+    await connection.execute(
+      `INSERT INTO table_${codigo} (FECHA, HORA, ASTRO, CHANCE, PAGAMAS, PAGATODO, PATA_MILLONARIA, DOBLECHANCE) VALUES (?,?,?,?,?,?,?,?) `,
+      [fecha, hora, 0, 0, 0, 0, 0, 0,]);
   } catch (error) {
     console.error(error)
     throw new Error('Error al insertar datos en la tabla')
