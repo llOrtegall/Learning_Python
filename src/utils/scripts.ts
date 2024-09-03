@@ -81,8 +81,8 @@ export const createTable = async (codigo: number) => {
 
   const query = `
     CREATE TABLE IF NOT EXISTS ${tableName} (
-      FECHA Date NOT NULL PRIMARY KEY,
-      HORA VARCHAR(10),
+      FECHA Date NOT NULL,
+      HORA VARCHAR(10) NOT NULL PRIMARY KEY,
       ASTRO INT,
       CHANCE INT,
       PAGAMAS INT,
